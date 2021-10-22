@@ -1,0 +1,57 @@
+service: anirakservice
+
+useDotenv: true
+variablesResolutionMode: 20210219
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: ${env:REGION}
+  memorySize: 128
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "arn:aws:s3:::anirak/*"
+
+functions:
+  createTask:
+    handler: handler.createTask
+    events:
+      - http:
+          path: /api/v1/task
+          method: post
+          cors: true
+  editTask:
+    handler: handler.editTask
+    events:
+      - http:
+          path: /api/v1/task/{id}
+          method: put
+          cors: true
+  getTasks:
+    handler: handler.getTasks
+    events:
+      - http:
+          path: /api/v1/task
+          method: get
+          cors: true
+  deleteTask:
+    handler: handler.deleteTask
+    events:
+      - http:
+          path: /api/v1/task/{id}
+          method: delete
+          cors: true
+  getSongs:
+    handler: handler.getSongs
+    events:
+      - http:
+          path: /api/v1/song
+          method: get
+          cors: true
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
