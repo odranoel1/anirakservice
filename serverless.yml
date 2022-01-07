@@ -17,28 +17,28 @@ provider:
 
 functions:
   createTask:
-    handler: handler.createTask
+    handler: handlers/tasks.createTask
     events:
       - http:
           path: /api/v1/task
           method: post
           cors: true
   editTask:
-    handler: handler.editTask
+    handler: handlers/tasks.editTask
     events:
       - http:
           path: /api/v1/task/{id}
           method: put
           cors: true
   getTasks:
-    handler: handler.getTasks
+    handler: handlers/tasks.getTasks
     events:
       - http:
           path: /api/v1/task
           method: get
           cors: true
   deleteTask:
-    handler: handler.deleteTask
+    handler: handlers/tasks.deleteTask
     events:
       - http:
           path: /api/v1/task/{id}
@@ -50,6 +50,27 @@ functions:
       - http:
           path: /api/v1/song
           method: get
+          cors: true
+  getMonths:
+    handler: handlers/months.getMonths
+    events:
+      - http:
+          path: /api/v1/month
+          method: get
+          cors: true
+  addMonth:
+    handler: handlers/months.addMonth
+    events:
+      - http:
+          path: /api/v1/month
+          method: post
+          cors: true
+  uploadFile:
+    handler: handlers/upload-file.main
+    events:
+      - http:
+          path: /api/v1/file
+          method: post
           cors: true
 
 plugins:
