@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
 const Bucket = process.env.AWS_S3_BUCKET;
 const Expires = 60 * 60;
-const folder = 'data/months';
+const folder = 'data/memories';
 const Key = 'data.json';
 
 const createPresignedUrl = (img) => {

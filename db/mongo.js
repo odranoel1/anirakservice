@@ -1,15 +1,15 @@
 const { MongoClient } = require('mongodb');
 
 const options = {
-    // useCreateIndex: true,
     useNewUrlParser: true,
-    // useFindAndModify: false,
     useUnifiedTopology: true,
 };
 
 module.exports = {
     mongoConnection: async () => {
-        const client = await MongoClient.connect(`${process.env.MONGODB_LOCAL_URI}/${process.env.MONGODB_LOCAL_NAME}`, options);
+        const testurl = process.env.MONGO_PROD_URI;
+        const uriLocal = `${process.env.MONGODB_LOCAL_URI}/${process.env.MONGODB_LOCAL_NAME}`;
+        const client = await MongoClient.connect(uriLocal, options);
         if (!client) {
             return null;
         }

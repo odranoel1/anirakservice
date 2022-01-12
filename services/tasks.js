@@ -1,33 +1,37 @@
-const s3Service = require('./s3');
+const { ObjectId } = require('mongodb');
+const { mongoConnection } = require('../db/mongo');
 
 const getTasks = async () => {
-    const data = await s3Service.getObject();
-    return JSON.parse(data.Body.toString('utf-8'));
+    try {
+        const client = await mongoConnection();
+        const Picture = client.db().collection('pictures');
+        const pictures = await Picture.find({}).sort({ createdAt: -1 }).toArray();
+        return pictures;
+    } catch (err) {
+        return err;
+    }
 };
 
 const createTask = async (task) => {
-    const tasks = await getTasks();
-    tasks.push(task);
-    const res = await s3Service.updateObj(tasks);
+    const client = await mongoConnection();
+    const Picture = client.db().collection('pictures');
+    const res = Picture.insertOne(task);
     return res;
 };
 
 const deleteTask = async (taskId) => {
-    let tasks = await getTasks();
-    tasks = tasks.filter(task => task.id !== taskId);
-    const res = await s3Service.updateObj(tasks);
+    const client = await mongoConnection();
+    const Picture = client.db().collection('pictures');
+    const res = Picture.deleteOne({ '_id': new ObjectId(taskId) });
     return res;
 };
 
 const editTask = async (taskId, data) => {
-    const tasks = await getTasks();
-    const tasksUpdated = tasks.map(task => {
-        if (task.id === taskId) {
-            task = data;
-        }
-        return task;
-    });
-    const res = await s3Service.updateObj(tasksUpdated);
+    const filter = { '_id': new ObjectId(taskId) };
+    const values = { $set: { ...data } };
+    const client = await mongoConnection();
+    const Picture = client.db().collection('pictures');
+    const res = await Picture.updateOne(filter, values);
     return res;
 };
 
